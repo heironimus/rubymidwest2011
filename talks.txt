@@ -1,0 +1,745 @@
+Fri 11/4/11 Morning
+No sudo for you
+
+hitch gem - used for pair programming and making a special pair email
+address
+
+Ruby Safari - Olai Bini
+
+regex
+/x - ignore whitespace
+(?#comment)
+1.9 <named_capture>
+"Ola Bini"i#[/regex/] = "Ola..." rather than match
+
+%r(regex)
+%(string), also %?string?, %[string], etc
+square brackets are most idiomatic use, otherwise too obscure
+
+override === can sometimes make cases easier to read
+Maybe too clever, but can be good for DSL
+
+flip-flop operator .. between two booleans too obscure to describe here
+good one liner
+Perl like
+never used, don't use
+
+zsuper - don't use id
+
+Trick for determining if nil is passed for default parameter
+foo(bar = (bar_default = true;nil)) # or something like this
+
+Use the enumerable methods, review them.  They are very good.
+
+Lazy enumerable
+You can chain most
+
+__END__ everything after will not be available, but can be read via DATA
+common in standard library, used with test cases
+
+$" - loaded features
+$LOADED_FEATURES << "something you don't want to load"
+
+Slides available
+
+Intermission - rcodetools - Josh Cheeck
+
+Michael Bleigh
+Fun things to do with Rails
+
+routing contraints
+Can make a model that processes routes
+Can put regular expressions in route for github style routing
+
+Customize generators
+i.e. no helper for controller generator
+i.e. config.sass.preferred_syntax = :sass if config.sass
+
+Migration shortcuts
+belongs_to instead of references also adds index
+can also use belongs_to in generator
+
+Mass assignment roles
+...update_attributes(params[:user], as: :admin) with work
+
+Touch
+belongs_to :section, touch: true
+Updates time stamps for association
+
+Capturing output in helper
+
+ActiveSupport::Concern
+
+Personal Asset Gem
+
+stdlib timeouts
+Timeout::timeout(5) do ...
+
+Fun with Times
+
+
+Ethan Gunderson
+ActiveRecord antipatterns
+When you start to scale, you really see limitations of ActiveRecord
+
+Add bulk flag to migration to do all at once
+
+Order.all -> Order.find_each or find_in_batches
+Fetches in batches
+
+nesquena/query_reviewer looks for bad queries
+
+ALWAYS have active record log queries, so you can see these.
+
+validates_uniqueness_of "does not work very well" or "works until you
+hit production"
+easiest way to fix is to create a unique index
+OR you can change isolation level when inserting a record, but this is
+too hard
+
+consistency_fail gem checks to see that your database matches your
+constraints
+
+Abusive Callbacks can call extra queries
+One thing is to not validate if record did not change
+Keep callbacks simple
+
+Breaking the Law (of Demeter)
+
+
+Zach Holman - github
+chatrooms for everything, often go back to history to see what's going
+on
+time flexibitily - work when you want to work
+
+pull requests and branching
+everyone can push
+you don't micromanage other people's code
+master is always deployable
+deploy 10-40 times per day
+if nervous, got to staging, or branch, or to a subset of servers to see
+what's happening
+Code quality - pull requests - discussion
+Do you really need all that process?
+
+Can you survive on simpler tools.
+Resist adding meta work
+
+What do you do over and over, and can automate
+
+Noel Rappin
+Test Your Legacy Code
+
+Legacy code = code without tests = code based on lost requirements
+i.e. you don't know what "correct" means
+Goal - respect working code and do no harm. Then improve code as you go
+along.
+
+When given a legacy project, you can't
+1) Write tests for the whole thing
+2) Just write it without a test
+Instead...
+Go back to basic TDD/BDD process for new changes only
+
+Start with cucumber.  Will not tell you where problem is, but will at
+least tell you there is a problem.
+
+Test driven exploration - write tests that demonstrate how code works -
+regression
+
+Mocks
+
+Isolation - Only touch existing methods to the extent that they call
+your new _clean_ method
+
+Seams - add new default arguments so existing calls do not need to
+change
+Create a subclass of a project for testing only
+
+Pebble - object that responsds to method missing and spits out what was
+called and where it was called from
+
+Pebble + TestObject - ? my idea
+
+What about bad tests?
+Tests are also code.
+"If you are looking at a test and can't figure out what it's doing in 5
+minutes, delete it."
+
+When can you refactor?
+Simple changes can be done at any time
+More complex refactors should be tied to actual new requests
+
+Consider the cost of change vs cost of no change
+
+-------------------
+Break it Down
+Service Oriented Architecture
+
+Think small
+Make smaller things that work together to avoid the big ball of mud
+Single responsibiity principle for an app
+Move you admin interface into a different app. Same with reporting,
+maybe search, payments, mail, etc.
+
+Indicators of a big ball of mud
+- lots of namespaces "I need to be separated, separate me more"
+- different users being targeted
+- number of developers
+- if there is someone already doing it an charging for it, you can too
+- reuse
+
+How to split something out
+test, isolate, replace
+
+Latency is an issue.
+monitoring
+defensive coding
+
+Reliability is another issue.
+-integration test the fail mode as well as the good mode
+
+Complexity is another issue
+- You have to run many different services just to try something
+- Use foreman gem (from Heroku)
+- Specialization - sometimes you don't care about the other processes,
+  so don't worry about the other parts
+
+Redundancy
+- You end up repeating yourself
+
+----------
+pair programming
+Green Dog
+
+openvim.com/tutorial.html
+
+Pair programming takes work. It's hard to collaborate.
+Personal skills.
+
+----------------------------
+Ruby community is awesome, but could be awesomer
+Marty Haught
+
+-More programmers
+-Leveling up - getting up to speed
+-Community raising
+
+Presenter started Boulder Ruby
+
+minaswan - Matz is nice and so we are nice
+
+bit.ly/event-organizing-101
+
+Is your event inviting to newbies
+  Have a section that is totally newbie friendly
+
+Kids
+ kidsruby.com
+ ruby4kids.com
+
+Ruby-Handbook on github (ongoing) "scout handbook" for Ruby
+
+coderetreat.com
+
+-----------
+Architecture
+Uncle Bob Martin
+
+Firing up Rails for every test is stupid.
+
+The web is a delivery mechanism, a detail.
+
+Interactor - implements a user story/use case
+Have application specific business rules.
+
+Entity - Business objects
+Application _independent_ business rules
+
+Interactor knows about an entity, but entity does not know about
+interactor.
+
+Both are decoupled from the database.  In Rails, they would _not_ be in
+the models directory
+
+How do we get the data in and out of the interactors and entities?
+Boundaries.
+
+(Ivar Jacobsoon (Yawkobson))
+
+After boundary, delivery mechanism.  (Not important.  Web, etc.)
+
+Deliver mechanism depends upon the boundaries, but nothing depends upon
+the delivery mechanism.  You could put everything on side of boundary in
+a gem, a dll, a jar file.
+
+Delivery mechanism could be Cucumber or other tester.  Could be much
+faster since no web/Rails stuff.
+
+MVC was meant to be use "in the small".  If there are 100 things on the
+screen, there would be 100 models and views.
+
+"The entire screen is a view" was not the original intent.
+
+Your views should know nothing of the business objects.
+
+Modem view presenter.
+
+The database is _not_ the center of your application.  The database is a
+detail, something you don't want to know about it.
+
+Isolate the database via and entity gateway. Put database and entity
+gateway implemention below some "line".
+
+Architecture is drawing a line, and all dependencies that cross the line
+go one way.
+
+Active Record - entity gateway implementation
+
+Your application should know nothing about rails, the database, or the
+web.
+
+Fitnesse - wiki based testing tool worked on by uncled Bob
+
+fit - framework for integration testing
+
+...long story about making a program that "needed" a database, but never
+actually implemented it
+
+A good architecture allows major decisions to be deferred.
+
+If you start with "a Rails app", you have already lost.
+
+A good architecturre maximizes the number of decisions NOT made.
+
+Writing tests after the fact is a waste of time.  You are not taking
+your tests seriously if you are not writing them first.
+
+Why do you write your tests first? How do you know when your tests cover
+everything?
+
+*****
+A suite of tests is there so that we can refactor.
+*****
+
+Are you afraid of your codei?
+
+As soon as you think "You know, I don't think that I tested everything,
+you have lost."
+
+It's not enough to have your tests first. If they aren't, you throw them
+away. How do you do that? Decouple, decouple, decouple.
+
+###################################################################
+Day 2
+
+Jim Weirich
+Ruby Debugger
+
+Black box game - 8x8 grid, hits, bounces, etc.
+
+pry
+
+debugger is handy with unit tests
+
+------------------------
+Red Hat OpenShift
+Matt Hicks
+
+selenium webriver nice
+(headless rubygem, ruby bindings, xvfb)
+
+headless - run Selenium tests on Amazon, etc.
+saucelabs - video, screenshots, etc of visual testing
+
+http://bit.ly/pUuaMy
+
+MCollective - manage lots of machines
+
+sozi presentation artwork?
+
+------------------------------------
+
+Ruby command line apps
+David Copeland
+
+You _will_ have to write a one-off script.
+Someone else _will_ use it.
+
+**Act like a first class app
+Act first class
+not a "script"
+it's an application, so treat it that way
+
+Real UI
+Write some documentation
+decide to care
+If you plan ahead, this stuff is not hard
+
+**Play well with others
+efaqs.org/docs/artu/ch01s06.html
+grepable (one record per line)cutable
+cutable (fields)
+exit codes (0 for success)
+messaging (stderr) vs. output (stdio)
+maven does not do this well
+svn - lousy app, but plays well with others
+
+**Be helpful
+Help users/future you know how to use
+Don't punish users if they are wrong
+
+latex - great app, not helpful
+
+git - helpful
+
+word by itself - short help
+word + -h or --help = more help
+never output ruby error messages.  Poor form.
+
+**Why Ruby
+Already part of the ecosystem
+Gem packaging
+great gems for command-line
+
+**Practical stuff
+-Check error codes
+-Log the command
+-Capture the output
+-think of "future you"
+
+ruby1.9 open3 library - capture3
+
+Customize it and put it in a gem
+
+un-awesome
+bad user interface
+if you are manipulation ARGV, you ar doing it wrong
+
+optionparser require 'optparse'
+has validators, help, etc
+easy for others to modify too
+no excuse, really
+However, not well suited for command suite (git)
+
+GLI - better for suite
+gemifies too
+
+
+thor and trollop
+methadone
+readline built into ruby
+highline
+terminal-tables
+rainbow - color your ouput
+aruba - for testing
+gem-man - man pages
+ronn - man pages in markdown
+
+most of this does actually work on Windows
+
+------------------------
+Confident Code
+Avdi Grimm
+
+It's about joy, not just code construction
+
+Ruby is designe to make porgrammers happy
+
+timid code
+lives in fear
+uncertain
+constantly second guessing
+mixes input, errors, business logic
+extra cognitive burden
+it's like a bad story
+
+confident...
+sure
+tells the story well
+says what it intedns to do
+
+source is for cowsay.rb
+
+4 parts should have, in order
+Gather input
+perform work
+deliver results
+handle failure
+
+duck typing is confident
+not using is_a? or respond_to?
+
+type casing is a code smell
+checking for method existence
+nil checking
+
+Dealing with uncertainty in input
+
+When in doubt, coerce
+Ruby standard library does this libereally
+to_s, to_i, etc.
+Use Array() a lot
+Array([1,2,3])
+Array("string")
+Array(nil)
+
+Decorator pattern
+Create a method
+
+Reject unexpected values
+State needs up front
+preconditions
+can also just ignore invalid data and return
+deal with it early so you don't have to later
+
+Special case pattern
+Create an object to rep the special case
+
+Null Object or Black Hole Object
+
+if options[:out[
+  options[:out] << output
+end
+vvvvvvvvv
+Maybe(options[:out]) << output
+
+nil is probably overused in Ruby
+
+Nil checks are the most common forms of timid code
+
+With hash, use fetch method
+
+Don't use nil as a default
+
+Use Null Object as a default, i.e. for a logger
+
+**Chainng
+
+**Iteration - used in JQuery
+Never work with singular objects, always use a collection
+Problem with single, there's either 1 or error.
+Collection - 0 or more
+
+Deliver results
+Be kind to your callers.
+Don't return nil.
+If you cannot return the type they are expecting, return a special case
+or throw an exception
+
+Handle failures
+Put happy path first
+
+Bouncer method - either raise an exception or do nothing
+
+begin-rescue-end is an interruption
+Use checked method,
+
+Observations
+Coherent narrative structure
+Lower complexity
+Not necessarily shorter
+
+Why?
+Fewer paths
+easier to debug
+self-documenting "Write for people first, computer second"
+Most importantly - JOY!!!
+
+-------------------------
+Modern databases
+Eric Redmond
+mongohq
+
+hbase interesting, connect using thrift
+built-in versioning
+
+schemas are awesome until they aren't
+mongo and couch are very javascript heavy
+
+map-reduce built-in
+
+Use redis rather than memcached
+
+redis
+sets
+pub/sub
+fast
+
+neo4j - gremlin, best graph based db
+
+-----------------
+
+Recommendation engines
+Matt Kirk
+
+Support Vector Machines with JRuby
+
+Use jruby plus Java's tons of packages
+
+Intent is to maximize the distance between clusters of information
+
+LibSVM is the most popular svm library. In Java.
+
+(Analysis of various data with ruby and LibSVM)
+
+Other stuff
+Linear regression
+Logistic regression
+Naive Bayesian Ranks
+K-nearest neighbor algorithm
+
+-------------------------
+People patterns
+Joe O'Brien
+
+Andy Hunt's book
+
+
+Tell bad news quickly
+It's an acid that will eat yourbrain alive.
+People are more concerned with your reaction than the actual news.
+Don't sugar-coat.  You are implying you are hiding something, that you
+know more about something than you really do.
+Be brutally honest.
+Giving positive feedback when it isn't deserved is not good.
+
+What do they see?
+What is the impression I'm giving off?
+
+Listen between the lines
+When people ask questions, there is usually something beneath them.
+
+Assume positives.
+As developers, we assume the worst possible outcomes.
+We hate to be let down.
+
+---------------------------
+Life on the Edge
+James Edward Gray
+Stargate Universe
+
+If it wasn't for edge cases, programming would be easy.
+
+nil is an edge case, by definition
+avoid it as much as possible
+
+Treat data as a stream
+Draw out only what you need
+Come back for more as needed
+This applies to all data, including database queries
+File.read(... <- code smell. Who knows how big, etc
+File.foreach(... <- better
+@post.comments.all <- bad
+@post.commetns.paginate
+@post.comments.find_each do
+
+Test edge cases
+Spend your paranoia on the edges
+Make edge cases impossible. In tests, allow all connections to fail in a
+test.
+
+Faraday - abstracts away the process of making requests
+typhoeus - libcurl?
+
+VCR - allows you you turn off all your net connections, plus record them
+
+--------------------
+High performance Ruby
+Dr. Nic
+
+nginx -> trinidad -> jruby
+
+--------------------
+Final Boss: Ror in the Video Game Industry
+David Czarnecki
+agoragames
+
+Scaling
+Ola Bini: Just Add Scaling
+
+runit - monitoring process
+munin - graphs
+
+Infrastructure validation - used cucumber scripts
+
+--------------------------
+Agility Undefined - Becoming Uncomfortable with Agile
+Andy Hunt
+
+Great things are great by themselves, they are only great in the proper
+context.
+
+Agile is ever-shifting, changing, and resonding
+
+There are cognitive reasons we don't do agile well.
+We tend to think that humans are logical and rational, but...
+people have many cognitive biasis.
+
+Many people cannot stand leaving something undecided.
+
+Even if it's wrong, just tell me.
+
+Uncertainty leaves your options open.
+
+You are most certain about a project at the end, not the beginning, so
+when do you want to make the important decisions?
+
+Fundamental attribution error.
+
+Post-purchase rationalization - we've paid the money, so we'll use it
+
+It's easy to assume familiarity with good.
+
+We do anything to avoid losing what we have.
+
+Planning Fallacy/Optimism Bias
+Underestimate time/overestimate ability
+
+Hawthorne Effect - change behavior when being watched
+
+Dunning-Kruger Effect
+2nd order incompetence
+Lemon juice man
+You don't know what you don't know
+Less skilled people have a tendency to overate
+
+Un-agile warngin signs
+-sloganization
+-follow rules vs. exercising judgment
+-confusing the model with reality
+-demanding conformity
+-spelling out too much detail
+-oversimplification fo complex situations
+
+Expert             Intuition    RelevantFocus      PartOfSystem
+proficient
+competent
+advanced beginner
+novice               Rules   ConsidersEverything DetachedObserver
+
+An Agile Mindsight
+"Agile developmen uses feedbback to make constant adjustments in a
+highly collaborative environment"
+
+Musts
+-All of your development and management practices generate continous,
+meaninful feedback
+-Your are able to evaluate that feedback, in context
+-You are able to change your code, your process, your team, and your
+interface to the rest of teh organization and the customer in order to
+respond to the feedback.
+
+Agile Manifesto
+
+If you're not failing, you're not trying hard enough.
+
+What are we missing?
+Improv
+1. Agree
+2. Add
+Yes, and...
+
+Agile has agreed, but has not added to move forward.
+
+
